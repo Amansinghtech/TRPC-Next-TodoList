@@ -1,5 +1,10 @@
 import { publicProcedure, router } from './trpc'
-import { getTodoList, insertTodoList } from '@main/db/todo.schema'
+import {
+	deleteTodoList,
+	getTodoList,
+	insertTodoList,
+	updateTodoList,
+} from '@main/db/todo.schema'
 import { z } from 'zod'
 
 export const appRouter = router({
@@ -19,6 +24,18 @@ export const appRouter = router({
 				title: input,
 			})
 			console.log('addTodoItem', out)
+		}),
+	deleteTodoItem: publicProcedure
+		.input(z.string())
+		.mutation(async ({ input }) => {
+			return await deleteTodoList(input)
+		}),
+
+	updateTodoItem: publicProcedure
+		.input(z.object({ id: z.string(), checked: z.boolean() }))
+		.mutation(async ({ input }) => {
+			let out = await updateTodoList(input.id, input.checked)
+			return out
 		}),
 })
 

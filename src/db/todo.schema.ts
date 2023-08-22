@@ -1,4 +1,4 @@
-import { InferModel } from 'drizzle-orm'
+import { InferModel, eq } from 'drizzle-orm'
 import { boolean, pgTable, serial, text, uuid } from 'drizzle-orm/pg-core'
 import db from './client'
 export const todoList = pgTable('todo_list', {
@@ -16,4 +16,19 @@ export async function insertTodoList(todo: NewTodoList): Promise<TodoList[]> {
 
 export async function getTodoList(): Promise<TodoList[]> {
 	return db.select().from(todoList).execute()
+}
+
+export async function deleteTodoList(itemId: string): Promise<TodoList[]> {
+	return db.delete(todoList).where(eq(todoList.id, itemId)).returning()
+}
+
+export async function updateTodoList(
+	itemId: string,
+	checked: boolean
+): Promise<TodoList[]> {
+	return db
+		.update(todoList)
+		.set({ checked })
+		.where(eq(todoList.id, itemId))
+		.returning()
 }

@@ -11,9 +11,26 @@ export default function Home() {
 			refetch()
 		},
 	})
+
+	const deleteTodo = trpc.deleteTodoItem.useMutation({
+		onSuccess: () => {
+			refetch()
+		},
+	})
+
+	const updateTodo = trpc.updateTodoItem.useMutation({
+		onSuccess: () => {
+			refetch()
+		},
+	})
+
 	const handleSubmit = useCallback(async () => {
 		addTodo.mutate(text)
 	}, [addTodo, text])
+
+	const handleDelete = async (id: string) => {
+		deleteTodo.mutate(id)
+	}
 
 	return (
 		<div className="min-h-screen bg-zinc-900 flex items-center justify-center">
@@ -22,13 +39,32 @@ export default function Home() {
 					Todo App
 				</h1>
 				<ul>
-					{todos?.map((todo, index) => (
+					{todos?.map((todo) => (
 						<li
-							key={index}
+							key={todo.id}
 							className="flex justify-between items-center p-2 mb-2 bg-zinc-700 rounded"
 						>
-							<span className="text-white">{todo.title}</span>
-							<button className="mr-2 text-red-500">
+							{/* checkbox */}
+							<input
+								type="checkbox"
+								className="mr-2"
+								checked={todo.checked}
+								onChange={() => {
+									// trpc.toggleTodoItem.mutate(todo.id)
+									updateTodo.mutate({
+										id: todo.id,
+										checked: !todo.checked,
+									})
+								}}
+							/>
+
+							<span className="text-white w-full text-start">
+								{todo.title}
+							</span>
+							<button
+								className="mr-2 text-red-500"
+								onClick={() => handleDelete(todo.id)}
+							>
 								Delete
 							</button>
 						</li>
