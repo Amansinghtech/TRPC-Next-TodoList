@@ -1,0 +1,27 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1692703605791,
+      "tag": "0000_greedy_liz_osborn",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1692703925048,
+      "tag": "0001_absurd_champions",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1692704107919,
+      "tag": "0002_wandering_shard",
+      "breakpoints": true
+    }
+  ]
+}
