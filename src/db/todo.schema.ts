@@ -13,3 +13,7 @@ export type NewTodoList = InferModel<typeof todoList, 'insert'>
 export async function insertTodoList(todo: NewTodoList): Promise<TodoList[]> {
 	return db.insert(todoList).values(todo).returning()
 }
+
+export async function getTodoList(): Promise<TodoList[]> {
+	return db.select().from(todoList).execute()
+}

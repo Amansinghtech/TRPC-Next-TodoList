@@ -1,5 +1,19 @@
+'use client'
+
+import { useCallback, useState } from 'react'
+import { trpc } from '@main/trpc/client'
+
 export default function Home() {
-	const todos = ['Buy groceries', 'Read a book', 'Go for a walk']
+	const [text, setText] = useState('')
+	const { data: todos, refetch } = trpc.getTodoList.useQuery()
+	const addTodo = trpc.addTodoItem.useMutation({
+		onSuccess: () => {
+			refetch()
+		},
+	})
+	const handleSubmit = useCallback(async () => {
+		addTodo.mutate(text)
+	}, [addTodo, text])
 
 	return (
 		<div className="min-h-screen bg-zinc-900 flex items-center justify-center">
@@ -8,12 +22,12 @@ export default function Home() {
 					Todo App
 				</h1>
 				<ul>
-					{todos.map((todo, index) => (
+					{todos?.map((todo, index) => (
 						<li
 							key={index}
 							className="flex justify-between items-center p-2 mb-2 bg-zinc-700 rounded"
 						>
-							<span className="text-white">{todo}</span>
+							<span className="text-white">{todo.title}</span>
 							<button className="mr-2 text-red-500">
 								Delete
 							</button>
@@ -25,8 +39,12 @@ export default function Home() {
 						type="text"
 						placeholder="Enter a task..."
 						className="w-full p-2 border border-zinc-600 rounded bg-zinc-900 text-white"
+						onChange={(e) => setText(e.target.value)}
 					/>
-					<button className="mt-2 p-2 bg-green-800 text-white rounded w-full">
+					<button
+						className="mt-2 p-2 bg-green-800 text-white rounded w-full"
+						onClick={handleSubmit}
+					>
 						Add Task
 					</button>
 				</div>
